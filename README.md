@@ -1,6 +1,6 @@
 # HTPC Download Box
 
-Sonarr / Radarr / Jackett / NZBGet / Deluge / OpenVPN / Plex
+Sonarr / Radarr / Jackett / Deluge / OpenVPN / Plex
 
 TV shows and movies download, sort, with the desired quality and subtitles, behind a VPN (optional), ready to watch, in a beautiful media player.
 All automated.
@@ -428,43 +428,6 @@ Click on `Add Indexer` and add any torrent indexer that you like. I added 1337x,
 You can now perform a manual search across multiple torrent indexers in a clean interface with no trillion ads pop-up everywhere. Then choose to save the .torrent file to the configured blackhole directory, ready to be picked up by Deluge automatically !
 
 ![Jacket manual search](img/jackett_manual.png)
-
-### Setup NZBGet
-
-#### Docker container
-
-Once again we'll use the Docker image from linuxserver and set it in a docker-compose file.
-
-```yaml
-  nzbget:
-    container_name: nzbget
-    image: linuxserver/nzbget:latest
-    restart: unless-stopped
-    network_mode: host
-    environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
-      - TZ=${TZ} # timezone, defined in .env
-     volumes:
-      - ${ROOT}/downloads:/downloads # download folder
-      - ${ROOT}/config/nzbget:/config # config files
-```
-
-#### Configuration and usage
-
-After running the container, web UI should be available on `localhost:6789`.
-Username: nzbget
-Password: tegbzn6789
-
-![NZBGet](img/nzbget_empty.png)
-
-Since NZBGet stays on my local network, I choose to disable passwords (`Settings/Security/ControlPassword` set to empty).
-
-The important thing to configure is the url and credentials of your newsgroups server (`Settings/News-servers`). I have a Frugal Usenet account at the moment, I set it up with TLS encryption enabled.
-
-Default configuration suits me well, but don't hesitate to have a look at the `Paths` configuration.
-
-You can manually add .nzb files to download, but the goal is of course to have Sonarr and Radarr take care of it automatically.
 
 ### Setup Plex
 

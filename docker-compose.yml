@@ -19,7 +19,7 @@ services:
     container_name: deluge
     image: linuxserver/deluge:latest
     restart: unless-stopped
-    network_mode: service:vpn # run on the vpn network
+    network_mode: host # service:vpn # run on the vpn network
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
@@ -42,19 +42,6 @@ services:
       - ${ROOT}/downloads/torrent-blackhole:/downloads # place where to put .torrent files for manual download
       - ${ROOT}/config/jackett:/config # config files
 
-  nzbget:
-    container_name: nzbget
-    image: linuxserver/nzbget:latest
-    restart: unless-stopped
-    network_mode: host
-    environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
-      - TZ=${TZ} # timezone, defined in .env
-    volumes:
-      - ${ROOT}/downloads:/downloads # download folder
-      - ${ROOT}/config/nzbget:/config # config files
-
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
@@ -64,6 +51,7 @@ services:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
+      - UMASK_SET=002 # optional
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${ROOT}/config/sonarr:/config # config files
@@ -79,37 +67,63 @@ services:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
+      - UMASK_SET=002 # optional
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${ROOT}/config/radarr:/config # config files
       - ${ROOT}/complete/movies:/movies # movies folder
       - ${ROOT}/downloads:/downloads # download folder
 
-  plex-server:
-    container_name: plex-server
-    image: plexinc/pms-docker:latest
-    restart: unless-stopped
-    environment:
-      - TZ=${TZ} # timezone, defined in .env
-    network_mode: host
-    volumes:
-      - ${ROOT}/config/plex/db:/config # plex database
-      - ${ROOT}/config/plex/transcode:/transcode # temp transcoded files
-      - ${ROOT}/complete:/data # media library
-
   bazarr:
     container_name: bazarr
-    image: linuxserver/bazarr
+    image: linuxserver/bazarr:latest
     restart: unless-stopped
     network_mode: host
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
-      - UMASK_SET=022 #optional
+      - UMASK_SET=002 # optional
     volumes:
       - ${ROOT}/config/bazarr:/config # config files
       - ${ROOT}/complete/movies:/movies # movies folder
       - ${ROOT}/complete/tv:/tv # tv shows folder
     ports:
       - 6767:6767
+
+  lidarr:
+    container_name: lidarr
+    image: linuxserver/lidarr:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+      - UMASK_SET=002 # optional
+    volumes:
+      - ${ROOT}/config/lidarr:/config # config files
+      - ${ROOT}/complete/music:/music # music folder
+      - ${ROOT}/downloads:/downloads # download folder
+    ports:
+      - 8686:8686
+
+  jellyfin:
+    container_name: jellyfin
+    image: jellyfin/jellyfin:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+    volumes:
+      - ${ROOT}/config/jellyfin/config:/config # config files
+      - ${ROOT}/config/jellyfin/cache:/cache # cache files
+      - ${ROOT}/complete/movies:/movies # movies folder
+      - ${ROOT}/complete/tv:/tv # tv folder
+      - ${ROOT}/complete/music:/music # music folder
+      - ${ROOT}/complete/books:/books # books folder
+    ports:
+      - 8096:8096
+      - 8920:8920 # optional
