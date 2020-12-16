@@ -19,8 +19,8 @@ services:
     container_name: deluge
     image: linuxserver/deluge:latest
     restart: unless-stopped
-#    depends_on:
-#      - vpn
+    depends_on:
+      - vpn
     network_mode: host # service:vpn # run on the vpn network
     environment:
       - PUID=${PUID} # default user id, defined in .env
@@ -44,8 +44,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${ROOT}/downloads/torrent-blackhole:/downloads # place where to put .torrent files for manual download
       - ${ROOT}/config/jackett:/config # config files
-    ports:
-      - 9117:9117
+#    ports:
+#      - 9117:9117
 
   sonarr:
     container_name: sonarr
@@ -62,8 +62,8 @@ services:
       - ${ROOT}/config/sonarr:/config # config files
       - ${ROOT}/complete/tv:/tv # tv shows folder
       - ${ROOT}/downloads:/downloads # download folder
-    ports:
-      - 8989:8989
+#    ports:
+#      - 8989:8989
 
   radarr:
     container_name: radarr
@@ -80,8 +80,8 @@ services:
       - ${ROOT}/config/radarr:/config # config files
       - ${ROOT}/complete/movies:/movies # movies folder
       - ${ROOT}/downloads:/downloads # download folder
-    ports:
-      - 7878:7878
+#    ports:
+#      - 7878:7878
 
   bazarr:
     container_name: bazarr
@@ -97,8 +97,8 @@ services:
       - ${ROOT}/config/bazarr:/config # config files
       - ${ROOT}/complete/movies:/movies # movies folder
       - ${ROOT}/complete/tv:/tv # tv shows folder
-    ports:
-      - 6767:6767
+#    ports:
+#      - 6767:6767
 
   lidarr:
     container_name: lidarr
@@ -114,8 +114,8 @@ services:
       - ${ROOT}/config/lidarr:/config # config files
       - ${ROOT}/complete/music:/music # music folder
       - ${ROOT}/downloads:/downloads # download folder
-    ports:
-      - 8686:8686
+#    ports:
+#      - 8686:8686
 
   lazylibrarian:
     container_name: lazylibrarian
@@ -131,8 +131,8 @@ services:
       - ${ROOT}/config/lazylibrarian:/config
       - ${ROOT}/downloads:/downloads
       - ${ROOT}/complete/books:/books
-    ports:
-      - 5299:5299
+#    ports:
+#      - 5299:5299
 
   jellyfin:
     container_name: jellyfin
@@ -150,15 +150,15 @@ services:
       - ${ROOT}/complete/tv:/tv # tv folder
       - ${ROOT}/complete/music:/music # music folder
       - ${ROOT}/complete/books:/books # books folder
-#      - /opt/vc/lib:/opt/vc/lib # optional, raspberry pi OpenMax libs
-    ports:
-      - 8096:8096
+      - /opt/vc/lib:/opt/vc/lib # optional, raspberry pi OpenMax libs
+#    ports:
+#      - 8096:8096
 #      - 8920:8920 # optional, https webui, need to set up own certificates
 #      - 7359:7359/udp # optional, lets people discover on local network
 #      - 1900:1900/udp # optional, service discovery by dnla and clients
-#    devices:
+    devices:
 #      - /dev/vcsm:/dev/vcsm # optional
-#      - /dev/vchiq:/dev/vchiq # optional
+      - /dev/vchiq:/dev/vchiq # optional
 #      - /dev/video10:/dev/video10 # optional
 #      - /dev/video11:/dev/video11 # optional
 #      - /dev/video12:/dev/video12 # optional
