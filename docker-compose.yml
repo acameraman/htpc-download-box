@@ -178,3 +178,20 @@ services:
       - ${ROOT}/complete/books:/books
 #    ports:
 #      - 8083:8083
+
+  deemix:
+    container_name: deemix
+    image: registry.gitlab.com/bockiii/deemix-docker
+    restart: unless-stopped
+    network_mode: host
+    environment:
+     - PUID=${PUID}
+     - PGID=${PGID}
+     - ARL=264e34c8bb22b3864fe7a982b422cfed96587887d37e8977f450625d87515faf0393$
+#     - UMASK_SET=022
+#     - DEEZUI=false
+    volumes:
+     - ${ROOT}/complete/music:/downloads
+     - ${ROOT}/config/deemix:/config
+#    ports:
+#      - 6595:6595
